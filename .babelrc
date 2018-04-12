@@ -1,0 +1,8 @@
+{
+  "presets": ["es2017", "react"],
+  "plugins": [
+    "transform-react-jsx",
+    "syntax-class-properties",
+    "transform-class-properties"
+  ]
+}
