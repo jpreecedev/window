@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans');
+
+body {
+  background-color: #2d3035;
+  font-family: 'IBM Plex Sans', sans-serif;
+  color: #fff;
+  text-align: center;
+}
+
+:global {
+  .recharts-wrapper {
+    margin: 40px auto 0 auto;
+  }
+}

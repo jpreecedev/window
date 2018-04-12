@@ -1,7 +1,9 @@
 import React from 'react'
 
 import { auth, authenticateUser, database } from '../../firebase'
-import Table from '../Table'
+import Chart from '../Chart'
+
+const data = [{ name: 'Page A', pv: 2400 }, { name: 'Page B', pv: 1398 }]
 
 class App extends React.Component {
   constructor(props) {
@@ -41,7 +43,6 @@ class App extends React.Component {
     auth.onAuthStateChanged(user => {
       if (user) {
         this.setState({
-          displayName: user.displayName,
           refreshToken: user.refreshToken,
           uid: user.uid,
           accessToken: null,
@@ -53,16 +54,6 @@ class App extends React.Component {
     })
   }
 
-  addEntry = () => {
-    const { uid } = this.state
-
-    const ref = database.ref(`entries/${uid}/`)
-    const newRef = ref.push()
-    newRef.set({
-      date: new Date().toISOString()
-    })
-  }
-
   authenticate = () => {
     this.setState({
       isAuthenticating: true
@@ -70,7 +61,6 @@ class App extends React.Component {
 
     authenticateUser().then(result => {
       this.setState({
-        displayName: result.user.displayName,
         accessToken: result.credential.accessToken,
         refreshToken: null,
         uid: null,
@@ -82,29 +72,19 @@ class App extends React.Component {
   }
 
   render() {
-    const {
-      isAuthenticating,
-      displayName,
-      refreshToken,
-      accessToken,
-      entries
-    } = this.state
+    const { isAuthenticating, refreshToken, accessToken, entries } = this.state
 
     return (
       <div>
         <header>
-          <h1>Firebase Authentication</h1>
+          <h1>AO.com Basket Page Performance</h1>
         </header>
         {!isAuthenticating && (
           <React.Fragment>
             {!(refreshToken || accessToken) && (
               <button onClick={this.authenticate}>Authenticate</button>
             )}
-            {displayName && <p>{displayName}</p>}
-            {entries && entries.length > 0 && <Table entries={entries} />}
-            {(refreshToken || accessToken) && (
-              <button onClick={this.addEntry}>Add entry</button>
-            )}
+            {<Chart data={data} />}
           </React.Fragment>
         )}
       </div>
