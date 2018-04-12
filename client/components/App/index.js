@@ -3,7 +3,7 @@ import React from 'react'
 import { auth, authenticateUser, database } from '../../firebase'
 import Chart from '../Chart'
 
-const data = [{ name: 'Page A', pv: 2400 }, { name: 'Page B', pv: 1398 }]
+import styles from './styles'
 
 class App extends React.Component {
   constructor(props) {
@@ -15,7 +15,7 @@ class App extends React.Component {
       refreshToken: null,
       uid: null,
       isAuthenticating: false,
-      entries: []
+      data: []
     }
   }
 
@@ -26,14 +26,14 @@ class App extends React.Component {
       return
     }
 
-    database.ref(`entries/${uid}/`).on('value', snapshot => {
+    database.ref(`data`).on('value', snapshot => {
       const val = snapshot.val()
       if (val) {
         const entries = Object.entries(val).map(entry => {
-          return entry[1].date
+          return entry[1]
         })
         this.setState({
-          entries: [...entries]
+          data: [...entries]
         })
       }
     })
@@ -72,7 +72,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { isAuthenticating, refreshToken, accessToken, entries } = this.state
+    const { isAuthenticating, refreshToken, accessToken, data } = this.state
 
     return (
       <div>
@@ -84,7 +84,25 @@ class App extends React.Component {
             {!(refreshToken || accessToken) && (
               <button onClick={this.authenticate}>Authenticate</button>
             )}
-            {<Chart data={data} />}
+
+            <div className={styles.wrapper}>
+              <Chart
+                data={data}
+                width={800}
+                height={500}
+                label="First Paint (ms)"
+                dataKey="firstPaint"
+                secondLabel="Load Time (ms)"
+                secondDataKey="loadTime"
+              />
+              <Chart
+                data={data}
+                width={800}
+                height={500}
+                label="Unused JavaScript (%)"
+                dataKey="unusedJs"
+              />
+            </div>
           </React.Fragment>
         )}
       </div>

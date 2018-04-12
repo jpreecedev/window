@@ -1,0 +1,6 @@
+{
+  "globals": {
+    "performance": true,
+    "chrome": true
+  }
+}

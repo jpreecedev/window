@@ -1,5 +1,5 @@
 {
-  "presets": ["es2017", "react"],
+  "presets": ["es2017", "react", "node8"],
   "plugins": [
     "transform-react-jsx",
     "syntax-class-properties",
