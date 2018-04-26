@@ -23,23 +23,13 @@ module.exports = {
         test: /\.scss$/,
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                modules: true,
-                localIdentName: '[name]__[local]___[hash:base64:5]',
-                camelCase: true
-              }
-            },
-            'sass-loader'
-          ]
+          use: ['css-loader', 'sass-loader']
         })
       }
     ]
   },
   resolve: {
-    extensions: ['.js', '.scss']
+    extensions: ['.js', '.json', '.scss']
   },
   plugins: [
     new CleanWebpackPlugin(['dist']),

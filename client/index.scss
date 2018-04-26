@@ -7,8 +7,10 @@ body {
   text-align: center;
 }
 
-:global {
-  .recharts-wrapper {
-    margin: 40px auto 0 auto;
-  }
+.recharts-wrapper {
+  margin: 40px auto 0 auto;
+}
+
+.wrapper {
+  display: flex;
 }

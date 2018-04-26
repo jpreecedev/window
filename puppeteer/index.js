@@ -1,34 +1,13 @@
 import puppeteer from 'puppeteer'
 import { database } from '../client/firebase'
 
-const formatDate = date => {
-  const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ]
-
-  const day = date.getDate()
-  const monthIndex = date.getMonth()
-  const year = date.getFullYear()
-
-  return day + ' ' + monthNames[monthIndex] + ' ' + year
-}
+import config from '../config'
 
 const pushToDatabase = data => {
-  const ref = database.ref(`data/`)
+  const ref = database.ref(`data/${config.YOUR_UNIQUE_GOOGLE_AUTH_ID}/`)
   const newRef = ref.push()
   newRef.set({
-    date: formatDate(new Date()),
+    date: new Date().toString(),
     ...data
   })
 }
@@ -38,7 +17,7 @@ const getPageMetrics = async () => {
   const page = await browser.newPage()
 
   await page.waitFor(1000)
-  await page.goto('https://ao.com/c/shoppingbasket.aspx')
+  await page.goto('https://ao.com')
 
   const perf = await page.evaluate(_ => {
     const { loadEventEnd, navigationStart } = performance.timing
@@ -49,20 +28,12 @@ const getPageMetrics = async () => {
     }
   })
 
-  const response = await page._client.send('Performance.getMetrics')
-  const JSUsedSize = response.metrics.find(x => x.name === 'JSHeapUsedSize').value
-  const JSTotalSize = response.metrics.find(x => x.name === 'JSHeapTotalSize').value
-
-  const usedJS = Math.round(JSUsedSize / JSTotalSize * 100)
-
   console.log(`First paint in ${perf.firstPaint}ms`)
   console.log(`Load time ${perf.loadTime}ms`)
-  console.log(`${100 - usedJS}% of JS is unused`)
 
   pushToDatabase({
     firstPaint: perf.firstPaint,
-    loadTime: perf.loadTime,
-    unusedJs: 100 - usedJS
+    loadTime: perf.loadTime
   })
 
   await browser.close()
