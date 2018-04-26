@@ -31,6 +31,10 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.json', '.scss']
   },
+  devtool: 'source-map',
+  devServer: {
+    contentBase: './dist'
+  },
   plugins: [
     new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
